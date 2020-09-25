@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import com.db.awmd.challenge.domain.Account;
 import com.db.awmd.challenge.dto.TransferMoneyRequest;
 import com.db.awmd.challenge.service.AccountsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Test;
@@ -108,16 +110,19 @@ public class AccountsControllerTest {
   public void transferMoney() throws Exception {
      Account account1 = new Account("Id-123", new BigDecimal("1000"));
     Account  account2 = new Account("Id-234", new BigDecimal("2000"));
-
+ 
     this.accountsService.createAccount(account1);
     this.accountsService.createAccount(account2);
     TransferMoneyRequest request =  new TransferMoneyRequest(account1.getAccountId(),account2.getAccountId(),new BigDecimal(500));
     this.accountsService.transferMoney(request);
         
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonString = mapper.writeValueAsString(request);
+    
     this.mockMvc.perform(get("/v1/accounts/transfermoney"))
       .andExpect(status().isOk())
       .andExpect(
-        content().string(request.toString()));
+        content().string(jsonString));
   }
   
   

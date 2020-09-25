@@ -67,6 +67,9 @@ public class AccountsController {
       responseMap.put("ErrorMessage", exception.getMessage());
       return new ResponseEntity<>(responseMap,HttpStatus.BAD_REQUEST);
     }
+    
+    Map responseMap = new HashMap();
+    responseMap.put("Message", transferMoneyReq.getAmount() +"  has been transferred to requested account ::"+transferMoneyReq.getToAccountId() );
     return new ResponseEntity<>(HttpStatus.OK);
    
   }
